@@ -251,7 +251,7 @@ exports.playCmd = rl => {
 
 exports.creditsCmd = rl => {
     log('Autores de la práctica:');
-    log('María Hernández', 'green');
+    log('MARIA', 'green');
     rl.prompt();
 
 
