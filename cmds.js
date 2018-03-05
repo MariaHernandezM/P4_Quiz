@@ -168,7 +168,7 @@ exports.testCmd =(rl,id)  => {
 
             const quiz = model.getByIndex(id);
 
-            rl.question(`${colorize(quiz.question, 'red')}${colorize('?', 'red')}`, respuesta => {
+            rl.question(`${colorize(quiz.question, 'red')}${colorize('? ', 'red')}`, respuesta => {
 
                 const resp = quiz.answer;
 
