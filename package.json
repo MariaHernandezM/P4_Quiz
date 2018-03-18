@@ -1,21 +1,21 @@
 {
-  "name": "p2_quiz",
+  "name": "quiz",
   "version": "1.0.0",
-  "description": "Proyecto P2_Quiz",
+  "description": "Proyecto Quiz",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js"
   },
   "keywords": [
-    "P2_Quiz",
-    "core",
-    "node"
+    "CORE",
+    "QUIT"
   ],
   "author": "Maria",
   "license": "Unlicense",
   "dependencies": {
-    "chalk": "^2.3.2",
-    "figlet": "^1.2.0"
+    "chalk": "^2.3.0",
+    "figlet": "^1.2.0",
+    "sequelize": "^4.35.2",
+    "sqlite3": "^3.1.13"
   }
 }
