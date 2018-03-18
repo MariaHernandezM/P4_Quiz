@@ -251,11 +251,11 @@ exports.testCmd =(rl,id)  => {
 
             if (respuesta.trim().toLowerCase() === resp.trim().toLowerCase()) {
                 log('Su respuesta es correcta.')
-                biglog("Correcta", "green")
+                log("Correcta", "green")
                 rl.prompt();
             } else {
                 log('Su respuesta es incorrecta.')
-                biglog("Inorrecta", "red")
+                log("Inorrecta", "red")
                 rl.prompt();
             }
         });
