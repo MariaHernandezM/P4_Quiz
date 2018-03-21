@@ -235,38 +235,40 @@ exports.editCmd = (rl,id) =>{
  * @param id Clave del quiz a probar.
  */
 
-exports.testCmd =(rl,id)  => {
+exports.testCmd = (rl,id) => {
 
-    if (typeof id === "undefined") {
-        errorlog(`Falta el parámetro id.`);
+    validateId(id)
+        .then(id => models.quiz.findById(id))
+.then(quiz=>{
+        if(!quiz){
+        throw  new Error(`No existe un quiz asociado al id=${id}.`)
+    }
+    return makeQuestion(rl,`${quiz.question} ? `)
+        .then(a => {
+        let respuesta = a.trim().toLowerCase()
+        let resp  =quiz.answer;
+    if(respuesta !== resp.trim().toLowerCase()) {
+        log('Su respuesta es incorrecta.'),
+            biglog("Incorrecta", "red")
+
+    }else {
+        return log('Su respuesta es correcta.'),
+            biglog("Correcta", "green")
+
+    }
+});
+})
+
+.catch(error=>{
+        errorlog(error.message);
+})
+.then(()=>{
         rl.prompt();
-    } else
-        try {
+});
 
-            const quiz = model.getByIndex(id);
-
-            rl.question(`${colorize(quiz.question, 'red')}${colorize('? ', 'red')}`, respuesta => {
-
-                const resp = quiz.answer;
-
-            if (respuesta.trim().toLowerCase() === resp.trim().toLowerCase()) {
-                log('Su respuesta es correcta.')
-                log("Correcta", "green")
-                rl.prompt();
-            } else {
-                log('Su respuesta es incorrecta.')
-                log("Inorrecta", "red")
-                rl.prompt();
-            }
-        });
-
-
-        }catch(error){
-    errorlog(error.message);
-    rl.prompt();
-   }
 
 };
+
 /**
  * Pregunta todos los quizzes existentes en el modelo en orden aleatorio.
  * Se gana si se contesta a todos satisfactoriamente.
