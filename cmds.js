@@ -234,7 +234,6 @@ exports.editCmd = (rl,id) =>{
  *
  * @param id Clave del quiz a probar.
  */
-
 exports.testCmd = (rl,id) => {
 
     validateId(id)
@@ -269,89 +268,61 @@ exports.testCmd = (rl,id) => {
 
 };
 
-/**
- * Pregunta todos los quizzes existentes en el modelo en orden aleatorio.
- * Se gana si se contesta a todos satisfactoriamente.
+/*
+ *Pregunta todos los quizzes existentes en el modelo en orden aleatorio.
+ *Se gana si se contesta a todos satisfactoriamente.
+ *
+ *@param rl Objeto readLine usado para implementar el CLI.
  */
 
 exports.playCmd = rl => {
-    let score = 0;
-    let toBePlayed = [];
 
-    models.quiz.findAll({raw:true})
-        .then(quizzes => {
-            toBePlayed = quizzes;
-    })
-
-
-        const playOne = () => {
-            return Promise.resolve()
-                .then(() => {
-
-
-                    if(toBePlayed.lenght <= 0){
-            console.log("SE ACABO");
-            return;
-        }
-
-        let pos =Math.floor(Math.random()*toBePlayed.length);
-                    let quiz = toBePlayed[pos];
-                    toBePlayed.splice(pos,1);
-
-                    return makeQuestion(rl,quiz.question)
-                        .then(answer => {
-                        if(answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim()
-    )
-        {
+    var cuenta = 1;
+    var toBeResolved = [];
+    var score = 0;
+    models.quiz.findAll()
+        .each(quiz => {
+        toBeResolved[cuenta-1] = cuenta;
+    cuenta = cuenta +1 ;
+})
+.then(() => {
+        const playOne = ()=> {
+        if ( toBeResolved.length == 0){
+        log("No hay nada más que preguntar.");
+        log(`Fin del juego. Aciertos: ${score}`),
+            biglog(score, 'blue');
+        rl.prompt();
+    }else{
+        let rand = Math.trunc(Math.random()*toBeResolved.length);
+        let id = toBeResolved[rand];
+        validateId(id)
+            .then(id => models.quiz.findById(id))
+    .then(quiz => {
+            pregunta = quiz.question;
+        makeQuestion(rl, pregunta + '?')
+            .then(a => {
+            console.log(a);
+        if ( a.toLocaleLowerCase() === quiz.answer.toLocaleLowerCase()){
             score++;
-            console.log("chachi");
-            return playOne();
+            log(`CORRECTO - Lleva ${score} aciertos.`);
+            toBeResolved.splice(rand,1);
+            playOne();
+        }else{
+            log('INCORRECTO.');
+            log(`Fin del juego. Aciertos: ${score}`);
+            biglog(score,'yellow');
+            rl.prompt();
         }
-    else
-        {
-            console.log("CACA");
-        }
+    });
     })
+    .catch(error => {
+            errorlog(error.message);
     })
+    .then(() => {
+            rl.prompt();
+    });
     }
-
-    models.quiz.findAll({raw:true})
-        .then(quizzes => {
-        toBePlayed = quizzes;
-})
-
-    .then(() => {
-    return playOne();
-})
-
-    .catch(e => {
-    console.log("Error: " + e);
-})
-    .then(() => {
-    console.log(score);
-    rl.prompt();
-})
+}
+    playOne();
+});
 };
-/**
- * Muestra los nombres de los autores de la práctica.
- */
-
-exports.creditsCmd = rl => {
-    log('Autores de la práctica:');
-    log('MARIA', 'green');
-    rl.prompt();
-
-
-};
-
-
-/**
- * Terminar el programa.
- */
-
-exports.quitCmd = rl => {
-    rl.close();
-
-};
-
-
