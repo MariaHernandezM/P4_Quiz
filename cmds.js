@@ -245,7 +245,7 @@ exports.testCmd = (rl, id) => {
             return makeQuestion(rl, `${quiz.question} ? `)
                 .then(a => {
                     let respuesta = a.trim().toLowerCase()
-                    let resp = quiz.answer;
+                    let resp = quiz.models.answer;
                     if (respuesta !== resp.trim().toLowerCase()) {
                         log('Su respuesta es incorrecta.');
                         biglog("Incorrecta", "red");
