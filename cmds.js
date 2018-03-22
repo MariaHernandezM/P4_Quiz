@@ -247,12 +247,12 @@ exports.testCmd = (rl,id) => {
         let respuesta = a.trim().toLowerCase()
         let resp  =quiz.answer;
     if(respuesta !== resp.trim().toLowerCase()) {
-        log('Su respuesta es incorrecta.'),
-            biglog("Incorrecta", "red")
+        log('Su respuesta es incorrecta.');
+            biglog("Incorrecta", "red");
 
     }else {
-        return log('Su respuesta es correcta.'),
-            biglog("Correcta", "green")
+         log('Su respuesta es correcta.');
+            biglog("Correcta", "green");
 
     }
 });
@@ -289,7 +289,7 @@ exports.playCmd = rl => {
         const playOne = ()=> {
         if ( toBeResolved.length == 0){
         log("No hay nada más que preguntar.");
-        log(`Fin del juego. Aciertos: ${score}`),
+        log(`Fin del juego. Aciertos: ${score}`);
             biglog(score, 'blue');
         rl.prompt();
     }else{
