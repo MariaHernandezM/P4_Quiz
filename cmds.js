@@ -234,36 +234,36 @@ exports.editCmd = (rl,id) =>{
  *
  * @param id Clave del quiz a probar.
  */
-exports.testCmd = (rl,id) => {
+exports.testCmd = (rl, id) => {
 
     validateId(id)
         .then(id => models.quiz.findById(id))
-.then(quiz=>{
-        if(!quiz){
-        throw  new Error(`No existe un quiz asociado al id=${id}.`)
-    }
-    return makeQuestion(rl,`${quiz.question} ? `)
-        .then(a => {
-        let respuesta = a.trim().toLowerCase()
-        let resp  =quiz.answer;
-    if(respuesta !== resp.trim().toLowerCase()) {
-        log('Su respuesta es incorrecta.');
-            biglog("Incorrecta", "red");
+        .then(quiz => {
+            if (!quiz) {
+                throw  new Error(`No existe un quiz asociado al id=${id}.`)
+            }
+            return makeQuestion(rl, `${quiz.question} ? `)
+                .then(a => {
+                    let respuesta = a.trim().toLowerCase()
+                    let resp = quiz.answer;
+                    if (respuesta !== resp.trim().toLowerCase()) {
+                        log('Su respuesta es incorrecta.');
+                        biglog("Incorrecta", "red");
 
-    }else {
-         log('Su respuesta es correcta.');
-            biglog("Correcta", "green");
+                    } else {
+                        log('Su respuesta es correcta.');
+                        biglog("Correcta", "green");
 
-    }
-});
-})
+                    }
+                });
+        })
 
-.catch(error=>{
-        errorlog(error.message);
-})
-.then(()=>{
-        rl.prompt();
-});
+        .catch(error => {
+            errorlog(error.message);
+        })
+        .then(() => {
+            rl.prompt();
+        });
 
 
 };
@@ -282,47 +282,47 @@ exports.playCmd = rl => {
     var score = 0;
     models.quiz.findAll()
         .each(quiz => {
-        toBeResolved[cuenta-1] = cuenta;
-    cuenta = cuenta +1 ;
-})
-.then(() => {
-        const playOne = ()=> {
-        if ( toBeResolved.length == 0){
-        log("No hay nada más que preguntar.");
-        log(`Fin del juego. Aciertos: ${score}`);
-            biglog(score, 'blue');
-        rl.prompt();
-    }else{
-        let rand = Math.trunc(Math.random()*toBeResolved.length);
-        let id = toBeResolved[rand];
-        validateId(id)
-            .then(id => models.quiz.findById(id))
-    .then(quiz => {
-            pregunta = quiz.question;
-        makeQuestion(rl, pregunta + '?')
-            .then(a => {
-            console.log(a);
-        if ( a.toLocaleLowerCase() === quiz.answer.toLocaleLowerCase()){
-            score++;
-            log(`CORRECTO - Lleva ${score} aciertos.`);
-            toBeResolved.splice(rand,1);
+            toBeResolved[cuenta - 1] = cuenta;
+            cuenta = cuenta + 1;
+        })
+        .then(() => {
+            const playOne = () => {
+                if (toBeResolved.length == 0) {
+                    log("No hay nada más que preguntar.");
+                    log(`Fin del juego. Aciertos: ${score}`);
+                    biglog(score, 'blue');
+                    rl.prompt();
+                } else {
+                    let rand = Math.trunc(Math.random() * toBeResolved.length);
+                    let id = toBeResolved[rand];
+                    validateId(id)
+                        .then(id => models.quiz.findById(id))
+                        .then(quiz => {
+                            pregunta = quiz.question;
+                            makeQuestion(rl, pregunta + '?')
+                                .then(a => {
+                                    console.log(a);
+                                    if (a.toLocaleLowerCase() === quiz.answer.toLocaleLowerCase()) {
+                                        score++;
+                                        log(`CORRECTO - Lleva ${score} aciertos.`);
+                                        toBeResolved.splice(rand, 1);
+                                        playOne();
+                                    } else {
+                                        log('INCORRECTO.');
+                                        log(`Fin del juego. Aciertos: ${score}`);
+                                        biglog(score, 'yellow');
+                                        rl.prompt();
+                                    }
+                                });
+                        })
+                        .catch(error => {
+                            errorlog(error.message);
+                        })
+                        .then(() => {
+                            rl.prompt();
+                        });
+                }
+            }
             playOne();
-        }else{
-            log('INCORRECTO.');
-            log(`Fin del juego. Aciertos: ${score}`);
-            biglog(score,'yellow');
-            rl.prompt();
-        }
-    });
-    })
-    .catch(error => {
-            errorlog(error.message);
-    })
-    .then(() => {
-            rl.prompt();
-    });
-    }
-}
-    playOne();
-});
+        });
 };
