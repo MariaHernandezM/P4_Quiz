@@ -326,3 +326,26 @@ exports.playCmd = rl => {
             playOne();
         });
 };
+
+
+/**
+ * Muestra los nombres de los autores de la práctica.
+ */
+
+exports.creditsCmd = rl => {
+    log('Autores de la práctica:');
+    log('MARIA', 'green');
+    rl.prompt();
+
+
+};
+
+
+/**
+ * Terminar el programa.
+ */
+
+exports.quitCmd = rl => {
+    rl.close();
+
+};
